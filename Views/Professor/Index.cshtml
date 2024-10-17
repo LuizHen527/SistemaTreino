@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Principal";
+}
+
+@if(ViewBag.NomeProfessor == null)
+{
+    <a asp-controller="Login">Login</a>
+}
+else
+{
+    <div class="d-flex w-100 flex-row-reverse mt-4">
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cadastrarTurma">Cadastrar turma</button>
+    </div>
+
+
+    <h4 class="mb-4">Sua lista de turmas</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Nome</th>
+                <th>Acao</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach(var turma in Model)
+            {
+                <tr>
+                    <td  >@turma.TurmaId</td>
+                    <td >@turma.Nome</td>
+                    <td class="d-flex">
+                        <button type="button" data-bs-target="#excluirTurma" data-bs-toggle="modal" class="btn text-danger text-decoration-underline" onclick="RemoverTurma(@turma.TurmaId)">Excluir</button>
+
+                        <form asp-action="Index" asp-controller="Atividade" asp-route-turmaId="@turma.TurmaId">
+                            <input type="hidden" name="turmaId" value="@turma.TurmaId"/>
+                            <button type="submit" class="btn text-success text-decoration-underline">Visualizar</button>
+                        </form>
+                    </td>
+                </tr>
+
+                @* EXCLUIR MODAL *@
+
+                <div class="modal fade" id="excluirTurma" tabindex="-1" aria-labelledby="excluirTurma" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="excluirTurmaLabel">Excluir turma</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <form asp-controller="Professor" asp-action="ExcluirTurma">
+
+                                <input type="hidden" id="turmaId" name="turmaId" />
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Excluir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+
+    @if (TempData["Mensagem"] != null)
+    {
+        <p style="color : red">@TempData["Mensagem"]</p>
+    }
+
+    @* CADASTRAR MODAL *@
+
+    <div class="modal fade" id="cadastrarTurma" tabindex="-1" aria-labelledby="cadastrarTurma" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="cadastrarTurmaLabel">Cadastrar Turma</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form asp-controller="Professor" asp-action="CadastrarTurma">
+                    
+                <div class="modal-body">
+                    <label class="form-label">Nome da Turma</label>
+                    <input type="text" name="nomeTurma" class="form-control" required />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function RemoverTurma(turmaId) {
+            // Define o ID da turma no campo oculto do modal
+            document.getElementById('turmaId').value = turmaId;
+
+            // Usa o Bootstrap para abbir o modal corretamente
+            var myModal = new bootstrap.Modal(document.getElementById('excluirTurma'));
+            myModal.show();
+        }
+    </script>
+}

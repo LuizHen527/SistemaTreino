@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Principal";
+}
+
+<div class="d-flex w-100 flex-row-reverse mt-4">
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cadastrarAtividade">Cadastrar atividade</button>
+</div>
+
+<h4 class="mb-5">Turma: @ViewBag.NomeTurma</h4>
+
+@*Tabela para visualizar atividades da turma*@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Numero</th>
+            <th>Nome</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var atividade in Model)
+        {
+            <tr>
+                <td>@atividade.AtividadeId</td>
+                <td>@atividade.Descricao</td>
+            </tr>            
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="cadastrarAtividade" tabindex="-1" aria-labelledby="cadastrarAtividade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="cadastrarAtividadeLabel">Cadastrar Atividade</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-action="CadastrarAtividade" method="post">
+
+                <input type="hidden" name="turmaId" value="@ViewBag.TurmaId" />
+
+                <div class="modal-body">
+                    <label class="form-label">Nome da atividade</label>
+                    <input type="text" name="descricao" class="form-control" required />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
